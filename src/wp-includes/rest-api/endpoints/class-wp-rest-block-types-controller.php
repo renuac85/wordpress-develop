@@ -266,6 +266,7 @@ class WP_REST_Block_Types_Controller extends WP_REST_Controller {
 			'category',
 			'keywords',
 			'parent',
+			'ancestor',
 			'provides_context',
 			'uses_context',
 			'supports',
@@ -346,7 +347,11 @@ class WP_REST_Block_Types_Controller extends WP_REST_Controller {
 
 		if ( $block_type->is_dynamic() ) {
 			$links['https://api.w.org/render-block'] = array(
-				'href' => add_query_arg( 'context', 'edit', rest_url( sprintf( '%s/%s/%s', 'wp/v2', 'block-renderer', $block_type->name ) ) ),
+				'href' => add_query_arg(
+					'context',
+					'edit',
+					rest_url( sprintf( '%s/%s/%s', 'wp/v2', 'block-renderer', $block_type->name ) )
+				),
 			);
 		}
 
@@ -637,6 +642,16 @@ class WP_REST_Block_Types_Controller extends WP_REST_Controller {
 				),
 				'parent'           => array(
 					'description' => __( 'Parent blocks.' ),
+					'type'        => array( 'array', 'null' ),
+					'items'       => array(
+						'type' => 'string',
+					),
+					'default'     => null,
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'ancestor'         => array(
+					'description' => __( 'Ancestor blocks.' ),
 					'type'        => array( 'array', 'null' ),
 					'items'       => array(
 						'type' => 'string',
